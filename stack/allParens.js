@@ -1,27 +1,19 @@
 var generateParenthesis = function (n) {
-  const arrTrack = ["("];
-  let startParams = n - 1;
-  let endParams = n;
-  const returnArr = [];
-  const createPrams = (arr, startParams, endParams) => {
-    if (endParams < startParams) {
+  const result = [];
+  const backtrack = (S = "", left = 0, right = 0) => {
+    if (S.length === n * 2) {
+      result.push(S);
       return;
     }
-    if (startParams === 0 && endParams === 0) {
-      returnArr.push(arr.toString().replace(/,/g, ""));
-      return;
+    if (left < n) {
+      backtrack(S + "(", left + 1, right);
     }
-    if (startParams > 0) {
-      arr.push("(");
-      createPrams([...arr], --startParams, endParams);
-      arr.pop();
-      startParams++;
+    if(right < left){
+      backtrack(S + ")", left, right + 1);
     }
-    arr.push(")");
-    createPrams([...arr], startParams, --endParams);
   };
-  createPrams(["("], startParams, endParams);
-  return returnArr;
+  backtrack();
+  return result;
 };
 
 console.log(generateParenthesis(3));

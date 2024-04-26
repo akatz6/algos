@@ -1,21 +1,18 @@
 const maxProfit = (prices) => {
-  let profit = 0;
-  let left = 0;
-  let right = left + 1;
-
-  while (right < prices.length) {
-    const leftValue = prices[left];
-    const rightValue = prices[right];
-    if (leftValue >= rightValue) {
-      left++;
-      right = left + 1;
-    } else {
-      const tempValue = rightValue - leftValue;
-      profit = Math.max(tempValue, profit);
-      right++;
-    }
+  let maxProfit = 0;
+  let left = right = 0;
+  while(right < prices.length){
+      if(prices[left] > prices[left+1]){
+          left++;
+          right = left + 1;
+      }
+      while(prices[right] >= prices[left] && right < prices.length){
+          maxProfit = Math.max(maxProfit, prices[right] - prices[left])
+          right++;
+      }
+      left = right;
   }
-  return profit;
+  return maxProfit;
 };
 
 console.log(maxProfit([7, 1, 5, 3, 6, 4]));

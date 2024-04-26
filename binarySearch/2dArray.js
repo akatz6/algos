@@ -1,33 +1,33 @@
 var searchMatrix = function (matrix, target) {
-  let [row, columns] = [matrix.length, matrix[0].length];
-  let [top, bottom] = [0, row - 1];
-  let foundRow = 0;
-  while (top <= bottom) {
-    const middle = Math.floor((top + bottom) / 2);
-    if (matrix[middle][columns - 1] < target) {
-      top = middle + 1;
-    } else if (matrix[middle][0] > target) {
-      bottom = middle - 1;
-    } else {
-      foundRow = middle;
-      break;
-    }
+  let top = 0;
+  let bottom = matrix.length - 1
+  let middleRow = 0;
+  while(top <= bottom){
+      const middle = Math.floor((top + bottom)/2)
+      const middleValue = matrix[middle][matrix[0].length - 1]
+      if(matrix[middle][0] <= target && target <= middleValue){
+          middleRow = middle;
+          break
+      }
+      if(target < matrix[middle][0]){
+          bottom = middle - 1
+      }else{
+          top = middle + 1
+      }
   }
-  let possibleRow = matrix[foundRow];
-  let [left, right] = [0, possibleRow.length - 1];
-  while (left <= right) {
-    const middle = Math.floor((left + right) / 2);
-    const temp = possibleRow[left]
-    if (
-      possibleRow[middle] === target
-    ) {
-      return true;
-    }
-    if (possibleRow[left] <= target && target < possibleRow[middle]) {
-      right = middle - 1;
-    } else {
-      left = middle + 1;
-    }
+  const row = matrix[middleRow]
+  let left = 0;
+  let right = row.length -1;
+  while(left <= right){
+      const middle = Math.floor((left + right)/2)
+      if(row[middle] === target){
+          return true;
+      }
+      if(target < row[middle]){
+          right = middle - 1
+      }else{
+          left = middle + 1
+      }
   }
   return false;
 };
