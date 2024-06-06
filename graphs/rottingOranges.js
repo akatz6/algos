@@ -1,63 +1,57 @@
+/**
+ * @param {number[][]} grid
+ * @return {number}
+ */
 var orangesRotting = function (grid) {
-  let minutes = 0;
-  const arr = [];
+  let freshOranges = 0;
+  let turns = 0;
+  const rottenOranges = [];
   for (let i = 0; i < grid.length; i++) {
-    const tempArr = [];
-    for (let j = 0; j < grid[i].length; j++) {
+    for (let j = 0; j < grid[0].length; j++) {
       if (grid[i][j] === 2) {
-        tempArr.push(i, j);
+        rottenOranges.push([i, j]);
+      }
+      if (grid[i][j] === 1) {
+        freshOranges++;
       }
     }
-    if (tempArr.length > 0) {
-      arr.push([tempArr]);
-    }
   }
-  console.log(arr);
-  minutes = setToRotten(grid, arr, minutes);
-  return minutes - 1;
-};
 
-const setToRotten = (grid, arr, minutes) => {
-  while (arr.length > 0) {
-    minutes++;
-    const elements = arr.pop();
-    while (elements.length > 0) {
-      const tempArr = [];
-      const tempElement = elements.pop();
-      if (
-        0 <= tempElement[0] - 1 &&
-        grid[tempElement[0] - 1][tempElement[1]] === 1
-      ) {
-        grid[tempElement[0] - 1][tempElement[1]] = 2;
-        tempArr.push(tempElement[0] - 1, tempElement[1]);
+  rottenOranges.push(" ");
+  while (rottenOranges.length) {
+    while (rottenOranges[0] !== " ") {
+      const position = rottenOranges.shift();
+      const i = position[0];
+      const j = position[1];
+
+      if (i - 1 >= 0 && grid[i - 1][j] === 1) {
+        grid[i - 1][j] = 2;
+        rottenOranges.push([i - 1, j]);
+        freshOranges--;
       }
-      if (
-        0 <= tempElement[1] - 1 &&
-        grid[tempElement[0]][tempElement[1] - 1] === 1
-      ) {
-        grid[tempElement[0]][tempElement[1] - 1] = 2;
-        tempArr.push(tempElement[0], tempElement[1] - 1);
+      if (j - 1 >= 0 && grid[i][j - 1] === 1) {
+        grid[i][j - 1] = 2;
+        rottenOranges.push([i, j - 1]);
+        freshOranges--;
       }
-      if (
-        grid[0].length >= tempElement[0] + 1 &&
-        grid[tempElement[0] + 1][tempElement[1]] === 1
-      ) {
-        grid[tempElement[0] + 1][tempElement[1]] = 2;
-        tempArr.push(tempElement[0] + 1, tempElement[1]);
+      if (i + 1 < grid.length && grid[i + 1][j] === 1) {
+        grid[i + 1][j] = 2;
+        rottenOranges.push([i + 1, j]);
+        freshOranges--;
       }
-      if (
-        grid.length >= tempElement[1] + 1 &&
-        grid[tempElement[0]][tempElement[1] + 1] === 1
-      ) {
-        grid[tempElement[0]][tempElement[1] + 1] = 2;
-        tempArr.push(tempElement[0], tempElement[1] + 1);
-      }
-      if (tempArr.length > 0) {
-        arr.push([tempArr]);
+      if (j + 1 < grid[0].length && grid[i][j + 1] === 1) {
+        grid[i][j + 1] = 2;
+        rottenOranges.push([i, j + 1]);
+        freshOranges--;
       }
     }
+    turns++;
+    rottenOranges.shift();
+    if (rottenOranges.length >= 1 && rottenOranges[0] !== " ") {
+      rottenOranges.push(" ");
+    }
   }
-  return minutes;
+  return freshOranges > 0 ? -1 : turns - 1;
 };
 
 console.log(

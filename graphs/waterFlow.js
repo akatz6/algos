@@ -1,41 +1,63 @@
 var pacificAtlantic = function(heights) {
     
-    const pacSet = new Set();
-    const atlSet = new Set();
-    const res = [];
-    
-	// leftmost(pacific) and rightmost(atlantic) column
-    for(let i=0;i<heights.length;i++){
-        helper(i,0,pacSet,Number.MIN_SAFE_INTEGER)
-        helper(i,heights[0].length-1,atlSet,Number.MIN_SAFE_INTEGER)
+    const setPacific = new Set();
+    const setAtlantic = new Set();
+    for(let i = 0; i < heights.length; i++){
+        for(let j = 0; j < heights[0].length; j++){
+            getTiles(i,j, setPacific,heights)
+        }
+        break;
     }
-	// top(pacific) and bottom(atlantic) row
-    for(let i=0;i<heights[0].length;i++){
-        helper(0,i,pacSet, Number.MIN_SAFE_INTEGER)
-        helper(heights.length-1,i,atlSet,Number.MIN_SAFE_INTEGER)
+    for(let i = 0; i < heights[0].length; i++){
+        for(let j = 0; j < heights.length; j++){
+            getTiles(j,i, setPacific,heights)
+        }
+        break;
     }
-    
-	// finding co-ordinates which are common among them
-    for(let val of pacSet){
-        if(atlSet.has(val)){
-            res.push(val.split('-'))
+    for(let i = heights.length -1; i >= 0 ; i--){
+        for(let j = 0; j < heights[0].length; j++){
+            getTiles(i,j, setAtlantic,heights)
+        }
+        break;
+    }
+      for(let i = heights[0].length -1; i >= 0 ; i--){
+        for(let j = 0; j < heights.length; j++){
+            getTiles(j,i, setAtlantic,heights)
+        }
+        break;
+    }
+    const returnSet = new Set()
+    for(const element of setPacific){
+        if(setAtlantic.has(element)){
+            returnSet.add(element)
         }
     }
-    
-    return res
-    
-    function helper(r,c,set,prevHeight){
-		// boundary condition
-        if(r<0||c<0||r>=heights.length||c>=heights[0].length||heights[r][c]<prevHeight||set.has(`${r}-${c}`)){
-            return 
-        }
-        set.add(`${r}-${c}`)
-        helper(r+1,c,set,heights[r][c])
-        helper(r-1,c,set,heights[r][c])
-        helper(r,c+1,set,heights[r][c])
-        helper(r,c-1,set,heights[r][c])
+    const returnArr = []
+    for(const element of returnSet){
+        const ele = element.split(",")
+        returnArr.push([ele[0], ele[1]])
     }
+    return returnArr
 };
+const getTiles = (i, j, set, grid) => {
+    if((set.has(`${i},${j}`))){
+        return
+    }
+    set.add(`${i},${j}`)
+    if(i-1 >= 0 && grid[i][j] <= grid[i-1][j]){
+        getTiles(i -1,j, set, grid)
+    }
+    if(j-1 >= 0 && grid[i][j] <= grid[i][j-1]){
+        getTiles(i,j -1, set, grid)
+    }
+    if(i+1 < grid.length   && grid[i][j] <= grid[i+1][j]){
+        getTiles(i + 1,j, set, grid)
+    }
+    if(j+1 < grid[0].length  && grid[i][j] <= grid[i][j+1]){
+      
+        getTiles(i,j+1, set, grid)
+    }
+}
 
 
 console.log(
