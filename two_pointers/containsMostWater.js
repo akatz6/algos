@@ -1,25 +1,20 @@
-const containsMostWater = (height) => {
+const containsMostWater = (heights) => {
+  let max = 0;
   let left = 0;
-  let subtractSize = 0;
-  const len = height.length - 1;
-  let right = len;
-  let maxVolume = 0;
-
-  while (left < right) {
-    const leftValue = height[left];
-    const rightValue = height[right];
-    let tempValue = 0;
-    if (leftValue < rightValue) {
-      tempValue = leftValue * (len - subtractSize);
-      left++;
-    } else {
-      tempValue = rightValue * (len - subtractSize);
-      right--;
-    }
-    subtractSize++;
-    maxVolume = Math.max(tempValue, maxVolume);
+  let right = heights.length - 1
+  let len = heights.length - 1
+  while(left < right){
+      const mult = Math.min(heights[left], heights[right])
+      const tempMax = mult * len;
+      max = Math.max(tempMax, max);
+      len--;
+      if( heights[left] <= heights[right]){
+          left++;
+      }else{
+          right--
+      }
   }
-  return maxVolume;
+  return max
 };
 
 console.log(containsMostWater([1, 8, 6, 2, 5, 4, 8, 3, 7]));
