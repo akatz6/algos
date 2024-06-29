@@ -1,33 +1,26 @@
-const longestRepeating = (s, k) => {
-  let len = 0;
+/**
+ * @param {string} s
+ * @param {number} k
+ * @return {number}
+ */
+const characterReplacement = (s, k) => {
+  let result = 0;
+  const map = new Map()
   let left = 0;
-  let right = 0;
-  let changed = 0;
-  let letter = "";
-  let arr = [];
-  while (right < s.length) {
-    if (letter === "") {
-      letter = s[right];
-      arr.push(letter);
-    } else {
-      if (letter !== s[right]) {
-        changed++;
-      }
-      arr.push(s[right]);
+  for(let right = 0; right < s.length; right++){
+    let len = right -left + 1;
+    const letter = s[right]
+    map.set(letter, 1 + (map.get(letter) || 0))
+    if(len - Math.max(...map.values()) > k){
+      const subLetter = s[left]
+      map.set(subLetter, map.get(subLetter) - 1)
+      left++
     }
-   
-    if (changed > k) {
-      left++;
-      right = left;
-      letter = s[left];
-      changed = 0;
-      arr = [letter];
-    }
-    right++;
-    len = Math.max(len, arr.length);
+    len = right -left + 1;
+    result = Math.max(result, len)
   }
-  return len;
+  return result;
 };
 
-console.log(longestRepeating("ABAB", 2));
-console.log(longestRepeating("AABABBA", 1));
+console.log(characterReplacement("ABAB", 2));
+console.log(characterReplacement("AABABBA", 1));
