@@ -30,7 +30,7 @@ var searchMatrix = function (matrix, target) {
       }
   }
   return false;
-};
+};  
 
 console.log(searchMatrix([[1]], 0));
 console.log(
@@ -63,3 +63,4 @@ console.log(
 );
 
 console.log(searchMatrix([[1, 3, 5]], 1));
+console.log(searchMatrix([[1]], 0));
